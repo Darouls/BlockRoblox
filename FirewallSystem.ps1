@@ -6,7 +6,7 @@ $Rules = @(
     "BLOQUE QUIC UDP 443"
 )
 
-$IsHome = Test-NetConnection -ComputerName $HomeProxyIP -Port $ProxyPort -InformationLevel Quiet
+$IsHome = [string](Test-NetConnection -ComputerName $HomeProxyIP -Port $ProxyPort -InformationLevel Quiet)
 
 $log = "C:\ProgramData\firewall-system.log"
 Add-Content $log "$(Get-Date) - Test maison = $IsHome"
