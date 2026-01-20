@@ -14,7 +14,7 @@ Add-Content $LogFile "$(Get-Date) - Test maison = $IsHome"
 
 if ($IsHome) {
     Set-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' ProxyEnable 1
-    Set-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' ProxyServer "$HomeProxyIP:$ProxyPort"
+    Set-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' ProxyServer "${HomeProxyIP}:${ProxyPort}"
     Add-Content $LogFile "Proxy ACTIVÉ"
 }
 else {
