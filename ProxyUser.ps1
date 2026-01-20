@@ -1,16 +1,22 @@
 $HomeProxyIP = "192.168.1.11"
-$ProxyPort = "3128"
+$ProxyPort   = "3128"
 
-$LogDir = "$env:LOCALAPPDATA\NetworkProxy"
+$LogDir  = "$env:LOCALAPPDATA\NetworkProxy"
 $LogFile = "$LogDir\proxy-user.log"
 
 if (!(Test-Path $LogDir)) {
     New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
 }
 
-$IsHome = Test-NetConnection -ComputerName $HomeProxyIP -Port $ProxyPort -InformationLevel Quiet
+$IsHome = $false
 
-Add-Content $LogFile "$(Get-Date) - Test maison = $IsHome"
+# Retry pendant ~20 secondes
+for ($i = 1; $i -le 5; $i++) {
+    $IsHome = Test-NetConnection -ComputerName $HomeProxyIP -Port $ProxyPort -InformationLevel Quiet
+    Add-Content $LogFile "$(Get-Date) - Tentative $i - Test maison = $IsHome"
+    if ($IsHome) { break }
+    Start-Sleep -Seconds 4
+}
 
 if ($IsHome) {
     Set-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' ProxyEnable 1
